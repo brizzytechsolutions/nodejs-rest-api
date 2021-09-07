@@ -1,4 +1,6 @@
+const { mongoose, Model } = require("mongoose");
 const Inventory = require("../models/inventory");
+var ObjectId = require('mongodb').ObjectID;
 
 const listInventory = async (req, res) => {
   try {
@@ -11,15 +13,15 @@ const listInventory = async (req, res) => {
 
 const getById = async (req, res) => {
   try {
-    const id = await Inventory.findById(req.params.id);
-    res.json(id);
+  const myId = await Inventory.findById(req.params.id).exec();
+    res.json(myId);
   } catch (error) {
     res.json({ message: error });
   }
 };
 
 const addNew = async (req, res) => {
-  const bupi = await new Inventory({
+  const data = await new Inventory({
     CategoryName: req.body.CategoryName,
     Description: req.body.Description,
     Quantity: req.body.Quantity,
@@ -28,8 +30,8 @@ const addNew = async (req, res) => {
   });
 
   try {
-    const ledata = await bupi.save();
-    res.json(ledata);
+    const didata = await  data.save();
+    res.json(didata);
   } catch (error) {
     res.json({ message: "Failed to add" });
   }
@@ -63,12 +65,8 @@ const deleteFile = async (req, res) => {
 
 const searching = async (req, res) => {
   try {
-    // const queryParam = await req.query;
-    // res.json(queryParam);
     const lina = await Inventory.find({ CategoryName: req.params.CategoryName });
     res.json(lina);
-    // const batla = await Inventory.find({ CategoryName: req.query});
-    // res.json(batla);
   } catch (error) {
     res.json({message: error});
   }
